@@ -83,19 +83,26 @@ void boot(multiboot_structure *MBS)
 	GDTInit();
 	print("GDT initialisiert.\n\r");
 
+	//Jetzt erst wichtige Daten wie MBS hinter den Bootloader kopieren
+	extern uint8_t bootloader_end;
+	void *to = memcpy(&bootloader_end, MBS, sizeof(*MBS)) + sizeof(*MBS);
+	memcpy(to, MBS->mbs_cmdline, strlen(MBS->mbs_cmdline));
+	to += strlen(MBS->mbs_cmdline);
+	memcpy(to, MBS->mbs_mmap_addr, MBS->mbs_mmap_length * 24);
+	to += MBS->mbs_mmap_length * 24;
+
 	print("Lade Kernel...\n\r");
 	//Erst das Modul hinter den Bootloader kopieren
 	uint8_t *tmp, *tmp_ziel;
 	uint32_t Size = MBS->mbs_mods_addr[mod].mod_end - MBS->mbs_mods_addr[mod].mod_start;
-	extern uint8_t bootloader_end;
-	tmp_ziel =&bootloader_end;
+	tmp_ziel = to;
 	tmp = (uint8_t*)MBS->mbs_mods_addr[mod].mod_start;
 	for(i = 0; i < Size; i++)
 	{
 		tmp_ziel[i] = tmp[i];
 	}
 	print("Kernel verschoben...\n\r");
-	if((Fehler = elfLade(&bootloader_end, 0x10)) == 0)
+	if((Fehler = elfLade(to, 0x10)) == 0)
 			print("Kernel geladen.\n\r");
 	else
 	{
@@ -214,7 +221,7 @@ void boot(multiboot_structure *MBS)
 	);
 	print("Long Mode aktiviert.\n\r");
 
-	uintptr_t address = getElfEntryAddress((elf_header*)&bootloader_end);
+	uintptr_t address = getElfEntryAddress((elf_header*)to);
 	print("Aktiviere Paging und starte Kernel...\n\r");
 	asm volatile(
 			"mov %%cr0,%%eax;"
@@ -321,4 +328,21 @@ char *IntToStr(int32_t Zahl)
 	if(Zahl < 0)
 		str[0] = '-';
 	return str;
+}
+
+void *memcpy(void *to, const void *from, size_t size)
+{
+	size_t i;
+	const char *src = from;
+	char *dest = to;
+	for(i = 0; i < size; i++)
+		dest[i] = src[i];
+	return to;
+}
+
+size_t strlen(const char *cs)
+{
+	register size_t i;
+	for(i = 0; cs[i] != '\0'; i++);
+	return i;
 }
