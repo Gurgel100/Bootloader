@@ -88,8 +88,8 @@ void boot(multiboot_structure *MBS)
 	void *to = memcpy(&bootloader_end, MBS, sizeof(*MBS)) + sizeof(*MBS);
 	memcpy(to, MBS->mbs_cmdline, strlen(MBS->mbs_cmdline));
 	to += strlen(MBS->mbs_cmdline);
-	memcpy(to, MBS->mbs_mmap_addr, MBS->mbs_mmap_length * 24);
-	to += MBS->mbs_mmap_length * 24;
+	memcpy(to, MBS->mbs_mmap_addr, MBS->mbs_mmap_length);
+	to += MBS->mbs_mmap_length;
 
 	print("Lade Kernel...\n\r");
 	//Erst das Modul hinter den Bootloader kopieren
