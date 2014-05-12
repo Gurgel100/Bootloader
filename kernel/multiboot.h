@@ -27,7 +27,7 @@ typedef struct
 		unsigned int	mbs_cmdline;				//2
 		unsigned int	mbs_mods_count;				//3
 		mods_addr*	mbs_mods_addr;					//3
-		unsigned long long int	mbs_syms;			//4 oder 5
+		unsigned int	mbs_syms[4];			//4 oder 5
 		unsigned int	mbs_mmap_length;			//6
 		unsigned int	mbs_mmap_addr;				//6
 		unsigned int	mbs_drives_length;			//7
@@ -41,6 +41,6 @@ typedef struct
 		unsigned short int	mbs_vbe_interface_seg;	//11
 		unsigned short int	mbs_vbe_interface_off;	//11
 		unsigned short int	mbs_vbe_interface_len;	//11
-}multiboot_structure;
+}__attribute__((packed))multiboot_structure;
 
 #endif /* MULTIBOOT_H_ */
