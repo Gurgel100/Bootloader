@@ -85,10 +85,14 @@ void boot(multiboot_structure *MBS)
 
 	//Jetzt erst wichtige Daten wie MBS hinter den Bootloader kopieren
 	extern uint8_t bootloader_end;
-	void *to = memcpy(&bootloader_end, MBS, sizeof(*MBS)) + sizeof(*MBS);
+	void *to = memcpy(&bootloader_end, MBS, sizeof(*MBS));
+	multiboot_structure *new_MBS = to;
+	to += sizeof(*MBS);
 	memcpy(to, MBS->mbs_cmdline, strlen(MBS->mbs_cmdline));
-	to += strlen(MBS->mbs_cmdline);
+	new_MBS->mbs_cmdline = to;
+	to += strlen(MBS->mbs_cmdline) + 1;
 	memcpy(to, MBS->mbs_mmap_addr, MBS->mbs_mmap_length);
+	new_MBS->mbs_mmap_addr = to;
 	to += MBS->mbs_mmap_length;
 
 	print("Lade Kernel...\n\r");
@@ -135,7 +139,7 @@ void boot(multiboot_structure *MBS)
 			"mov $0,%%ax;"
 			"mov %%ax,%0;"
 			".2:"
-			:"=m" (Ergebnis) :
+			:"=m" (Ergebnis) : :"eax", "ebx", "ecx", "edx"
 	);
 	if(Ergebnis == 0)
 	{
@@ -147,9 +151,10 @@ void boot(multiboot_structure *MBS)
 	print("   Long Mode wird unterstuetzt.\n\r");
 	print("   Aktiviere PAE (physical address extension)...\n\r");
 	asm volatile(
-			"mov %cr4,%eax;"
-			"or $0x20,%eax;"	//Das 5. Bit im CR4 aktivieren
-			"mov %eax,%cr4;"
+			"mov %%cr4,%%eax;"
+			"or $0x20,%%eax;"	//Das 5. Bit im CR4 aktivieren
+			"mov %%eax,%%cr4;"
+			: : :"eax"
 	);
 	print("   Initialisiere Paging...\n\r");
 	static struct{
@@ -214,10 +219,11 @@ void boot(multiboot_structure *MBS)
 	print("   Paging initialisiert.\n\r");
 	print("   Long Mode aktivieren...\n\r");
 	asm volatile(								//LM-Bit setzen = Long Mode aktivieren
-			"mov $0xc0000080,%ecx;"
+			"mov $0xc0000080,%%ecx;"
 			"rdmsr;"
-			"bts $8,%eax;"
+			"bts $8,%%eax;"
 			"wrmsr;"
+			: : :"eax", "ecx", "edx"
 	);
 	print("Long Mode aktiviert.\n\r");
 
@@ -231,7 +237,7 @@ void boot(multiboot_structure *MBS)
 			"pushl $0x18;"	//CS und EIP auf den Stack legen damit der Prozessor nach dem ret
 			"pushl %0;"		//Befehl dort weitermacht. ljmp $0x18,*%0 funktioniert nicht.
 			"lret;"			//So kann man dies überbrücken.
-			: :"r" (address), "b" (MBS) :"eax"
+			: :"r" (address), "b" (new_MBS) :"eax"
 	);
 	/*asm(
 			"mov $0x20,%%ax;"
