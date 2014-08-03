@@ -24,5 +24,6 @@ void scrollScreen(int Anzahl);
 char *IntToStr(int32_t Zahl);
 void *memcpy(void *to, const void *from, size_t size);
 size_t strlen(const char *cs);
+void panic(const char *string);
 
 #endif /* BOOTLOADER_H_ */

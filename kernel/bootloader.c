@@ -54,10 +54,10 @@ void boot(multiboot_structure *MBS)
 			}
 		}
 		else
-			print("Es wurde kein Modul geladen.\n\r");
+			panic("Es wurde kein Modul geladen.\n\r");
 	}
 	else
-		print("GRUB hat keine Module geladen.\n\r");
+		panic("GRUB hat keine Module geladen.\n\r");
 
 	char Fehler;
 	register int i;
@@ -351,4 +351,12 @@ size_t strlen(const char *cs)
 	register size_t i;
 	for(i = 0; cs[i] != '\0'; i++);
 	return i;
+}
+
+void panic(const char *string)
+{
+	print("PANIC: ");
+	print(string);
+	//CPU anhalten
+	asm volatile("cli;hlt;");
 }
