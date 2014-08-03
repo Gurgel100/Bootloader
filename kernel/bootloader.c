@@ -83,30 +83,8 @@ void boot(multiboot_structure *MBS)
 	GDTInit();
 	print("GDT initialisiert.\n\r");
 
-	//Jetzt erst wichtige Daten wie MBS hinter den Bootloader kopieren
-	extern uint8_t bootloader_end;
-	void *to = memcpy(&bootloader_end, MBS, sizeof(*MBS));
-	multiboot_structure *new_MBS = to;
-	to += sizeof(*MBS);
-	memcpy(to, MBS->mbs_cmdline, strlen(MBS->mbs_cmdline));
-	new_MBS->mbs_cmdline = to;
-	to += strlen(MBS->mbs_cmdline) + 1;
-	memcpy(to, MBS->mbs_mmap_addr, MBS->mbs_mmap_length);
-	new_MBS->mbs_mmap_addr = to;
-	to += MBS->mbs_mmap_length;
-
 	print("Lade Kernel...\n\r");
-	//Erst das Modul hinter den Bootloader kopieren
-	uint8_t *tmp, *tmp_ziel;
-	uint32_t Size = MBS->mbs_mods_addr[mod].mod_end - MBS->mbs_mods_addr[mod].mod_start;
-	tmp_ziel = to;
-	tmp = (uint8_t*)MBS->mbs_mods_addr[mod].mod_start;
-	for(i = 0; i < Size; i++)
-	{
-		tmp_ziel[i] = tmp[i];
-	}
-	print("Kernel verschoben...\n\r");
-	if((Fehler = elfLade(to, 0x10)) == 0)
+	if((Fehler = elfLade(MBS->mbs_mods_addr[mod].mod_start, 0x10)) == 0)
 			print("Kernel geladen.\n\r");
 	else
 	{
@@ -227,7 +205,7 @@ void boot(multiboot_structure *MBS)
 	);
 	print("Long Mode aktiviert.\n\r");
 
-	uintptr_t address = getElfEntryAddress((elf_header*)to);
+	uintptr_t address = getElfEntryAddress((elf_header*)MBS->mbs_mods_addr[mod].mod_start);
 	print("Aktiviere Paging und starte Kernel...\n\r");
 	asm volatile(
 			"mov %%cr0,%%eax;"
@@ -237,7 +215,7 @@ void boot(multiboot_structure *MBS)
 			"pushl $0x18;"	//CS und EIP auf den Stack legen damit der Prozessor nach dem ret
 			"pushl %0;"		//Befehl dort weitermacht. ljmp $0x18,*%0 funktioniert nicht.
 			"lret;"			//So kann man dies überbrücken.
-			: :"r" (address), "b" (new_MBS) :"eax"
+			: :"r" (address), "b" (MBS) :"eax"
 	);
 	/*asm(
 			"mov $0x20,%%ax;"
