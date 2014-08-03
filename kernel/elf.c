@@ -105,17 +105,15 @@ char elfLade(void *Datei, uint16_t Segment)
 		);	*/		//0				1			2				3								4
 		elf64_xword filesz = ProgramHeader[i].p_filesz;
 		elf64_xword memsz = ProgramHeader[i].p_memsz;
-		register int j;
+		register uint64_t j;
 		for(j = 0; j < filesz; j++)
 		{
 			Ziel[j] = Speicher[j];
 		}
 
-		if(filesz < memsz)
-		{
-			for(j = filesz; j < (memsz - filesz); j++)
-				Ziel[j] = 0;
-		}
+		//Wenn nötig mit Nullen auffüllen
+		for(j = filesz; j < memsz; j++)
+			Ziel[j] = 0;
 	}
 	return 0;
 }
