@@ -23,6 +23,7 @@ void clearDisp(void);
 void scrollScreen(int Anzahl);
 char *IntToStr(int32_t Zahl);
 void *memcpy(void *to, const void *from, size_t size);
+void *memset(void *block, int c, size_t n);
 size_t strlen(const char *cs);
 void panic(const char *string);
 

@@ -293,11 +293,12 @@ void scrollScreen(int Anzahl)
 	char *gs = (char*)GRAFIKSPEICHER;
 	for(i = 0; i < Anzahl; i++)
 	{
-		for(zeile = 0; zeile < 24; zeile++)
+		memcpy(gs, gs + zeile * 80, 24 * 80);
+		/*for(zeile = 0; zeile < 24; zeile++)
 			for(spalte = 0; spalte < 80; spalte++)
 			{
 				gs[zeile * 80 + spalte] = gs[(zeile + 1) * 80 + spalte];
-			}
+			}*/
 		//Letzte Zeile löschen
 		zeile = 24 - i;
 		for(spalte = 0; spalte < 80; spalte++)
@@ -343,6 +344,14 @@ void *memcpy(void *to, const void *from, size_t size)
 	for(i = 0; i < size; i++)
 		dest[i] = src[i];
 	return to;
+}
+
+void *memset(void *block, int c, size_t n)
+{
+	unsigned char volatile *i;
+	for(i = block; i < block + n; i++)
+		*i = (unsigned char)c;
+	return block;
 }
 
 size_t strlen(const char *cs)
