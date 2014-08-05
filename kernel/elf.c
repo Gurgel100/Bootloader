@@ -51,13 +51,19 @@ uint32_t getElfLength(elf_header *ElfHeader)	//gibt die Länge des ersten Segmen
 	return (uint32_t)ProgramHeader->p_filesz;
 }
 
-char elfLade(void *Datei, uint16_t Segment)
+void *elfLade(void *Datei, uint16_t Segment)
 {
 	elf_header *Header = Datei;
 	char *Speicher;
 	char *Ziel;
+	elf_header tmpHeader;
+	elf_program_header_entry tmpProgramHeader[Header->e_phnum];
 
 	elf_program_header_entry *ProgramHeader = ((void*)Header) + Header->e_phoff;
+
+	//Headers zwischenspeichern
+	Header = memcpy(&tmpHeader, Header, sizeof(elf_header));
+	ProgramHeader = memcpy(&tmpProgramHeader, ProgramHeader, sizeof(*ProgramHeader) * Header->e_phnum);
 
 	register int i;
 	for(i = 0; i < Header->e_phnum; i++)
@@ -115,5 +121,5 @@ char elfLade(void *Datei, uint16_t Segment)
 		for(j = filesz; j < memsz; j++)
 			Ziel[j] = 0;
 	}
-	return 0;
+	return (void*)Header->e_entry;
 }

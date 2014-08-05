@@ -105,17 +105,7 @@ void boot(multiboot_structure *MBS)
 	}
 
 	print("Lade Kernel...\n\r");
-	if((Fehler = elfLade(new_MBS.mbs_mods_addr[mod].mod_start, 0x10)) == 0)
-			print("Kernel geladen.\n\r");
-	else
-	{
-		print("Fehlercode: ");
-		print(IntToStr(Fehler));
-		print("\n\r");
-		print("Bootvorgang wird abgebrochen...");
-		asm("cli;hlt");
-	}	//Einfachere Methode gefunden: GDT-Eintrag einfach auf Addresse des Codes legen,
-		//anstatt Kernel zu verschieben --> Überlegung: Paging
+	uintptr_t address = (uintptr_t)elfLade(new_MBS.mbs_mods_addr[mod].mod_start, 0x10);
 
 	print("Initialisiere Long Mode...\n\r");
 	uint8_t Ergebnis;
@@ -226,7 +216,6 @@ void boot(multiboot_structure *MBS)
 	);
 	print("Long Mode aktiviert.\n\r");
 
-	uintptr_t address = getElfEntryAddress((elf_header*)new_MBS.mbs_mods_addr[mod].mod_start);
 	print("Aktiviere Paging und starte Kernel...\n\r");
 	asm volatile(
 			"mov %%cr0,%%eax;"

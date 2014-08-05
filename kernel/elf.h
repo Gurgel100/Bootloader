@@ -124,6 +124,6 @@ uintptr_t getElfContent(elf_header *ElfHeader);
 uint32_t getElfAddress(elf_header *ElfHeader);
 uint32_t getElfEntryAddress(elf_header *ElfHeader);
 uint32_t getElfLength(elf_header *ElfHeader);
-char elfLade(void *Datei, uint16_t Segment);	//Par.: Datei = Addresse der Datei im Speicher; Segment = Segment in das kopiert werden soll (GDT)
+void *elfLade(void *Datei, uint16_t Segment);	//Par.: Datei = Addresse der Datei im Speicher; Segment = Segment in das kopiert werden soll (GDT)
 
 #endif /* ELF_H_ */
