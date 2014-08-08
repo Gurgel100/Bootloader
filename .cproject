@@ -35,10 +35,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/kernel}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/kernel/boott}&quot;"/>
 								</option>
-								<option id="gnu.c.compiler.option.warnings.extrawarn.115192712" superClass="gnu.c.compiler.option.warnings.extrawarn" value="true" valueType="boolean"/>
-								<option id="gnu.c.compiler.option.warnings.nowarn.52216064" superClass="gnu.c.compiler.option.warnings.nowarn" value="true" valueType="boolean"/>
-								<option id="gnu.c.compiler.option.debugging.other.1201761140" superClass="gnu.c.compiler.option.debugging.other" value="-gdwarf-3" valueType="string"/>
-								<option id="gnu.c.compiler.option.optimization.flags.244618508" superClass="gnu.c.compiler.option.optimization.flags" value="-Og" valueType="string"/>
+								<option id="gnu.c.compiler.option.warnings.extrawarn.115192712" name="Extra warnings (-Wextra)" superClass="gnu.c.compiler.option.warnings.extrawarn" value="true" valueType="boolean"/>
+								<option id="gnu.c.compiler.option.warnings.nowarn.52216064" name="Inhibit all warnings (-w)" superClass="gnu.c.compiler.option.warnings.nowarn" value="true" valueType="boolean"/>
+								<option id="gnu.c.compiler.option.debugging.other.1201761140" name="Other debugging flags" superClass="gnu.c.compiler.option.debugging.other" value="-gdwarf-3" valueType="string"/>
+								<option id="gnu.c.compiler.option.optimization.flags.244618508" name="Other optimization flags" superClass="gnu.c.compiler.option.optimization.flags" value="-Og" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1502127423" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.961896945" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
@@ -98,14 +98,14 @@
 								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.option.optimization.level.730964280" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" value="gnu.c.optimization.level.most" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.560225314" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" value="gnu.c.debugging.level.none" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.preprocessor.nostdinc.325211781" name="Do not search system directories (-nostdinc)" superClass="gnu.c.compiler.option.preprocessor.nostdinc" value="true" valueType="boolean"/>
-								<option id="gnu.c.compiler.option.misc.other.767595678" name="Other flags" superClass="gnu.c.compiler.option.misc.other" value="-c -fmessage-length=0 -m32 -ffreestanding -mno-red-zone" valueType="string"/>
+								<option id="gnu.c.compiler.option.misc.other.767595678" name="Other flags" superClass="gnu.c.compiler.option.misc.other" value="-c -fmessage-length=0 -m32 -ffreestanding -mno-red-zone -march=i686" valueType="string"/>
 								<option id="gnu.c.compiler.option.include.paths.577142554" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/kernel}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/kernel/boott}&quot;"/>
 								</option>
-								<option id="gnu.c.compiler.option.warnings.extrawarn.332578902" superClass="gnu.c.compiler.option.warnings.extrawarn" value="true" valueType="boolean"/>
-								<option id="gnu.c.compiler.option.warnings.nowarn.1648986898" superClass="gnu.c.compiler.option.warnings.nowarn" value="true" valueType="boolean"/>
-								<option id="gnu.c.compiler.option.debugging.other.606966369" superClass="gnu.c.compiler.option.debugging.other" value="" valueType="string"/>
+								<option id="gnu.c.compiler.option.warnings.extrawarn.332578902" name="Extra warnings (-Wextra)" superClass="gnu.c.compiler.option.warnings.extrawarn" value="true" valueType="boolean"/>
+								<option id="gnu.c.compiler.option.warnings.nowarn.1648986898" name="Inhibit all warnings (-w)" superClass="gnu.c.compiler.option.warnings.nowarn" value="true" valueType="boolean"/>
+								<option id="gnu.c.compiler.option.debugging.other.606966369" name="Other debugging flags" superClass="gnu.c.compiler.option.debugging.other" value="" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.572155592" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.216964474" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
